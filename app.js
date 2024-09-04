@@ -62,10 +62,12 @@ function cheakWin() {
                 if (xWins === 3) {
                     p.innerHTML = "Hat-Trick Win For X";
                     p.classList.add('#p');
+                    xWins=0;
                 }
                 else if (owins === 3) {
                     p.innerHTML = "Hat-Trick Win For Y";
                     p.classList.add('#p');
+                    owins=0;
                 }
             }
         }
