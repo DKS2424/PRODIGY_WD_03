@@ -176,3 +176,30 @@ body::-webkit-scrollbar {
 
     }
 }
+
+@media(max-width:500px) {
+
+    .body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .Main {
+        width: 85%;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(50px);
+        border-radius: 5%;
+    }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        height: 340px;
+        width: 300px;
+        margin: 30px auto;
+        border: 2px solid #000;
+
+    }
+}
