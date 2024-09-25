@@ -1,95 +1,94 @@
 let boxes = document.querySelectorAll(".box");
-let p = document.querySelector('#p')
-
-
+let p = document.querySelector('#p');
 let turn = "X";
 let isGameOver = false;
-let xWins = 0;
-let owins = 0;
+let xConsecutiveWins = 0;  // Track consecutive wins for X
+let oConsecutiveWins = 0;  // Track consecutive wins for O
 
+// Reset the game board and attach event listeners
 boxes.forEach(e => {
-    e.innerHTML = ""
+    e.innerHTML = "";
     e.addEventListener("click", () => {
         if (!isGameOver && e.innerHTML === "") {
             e.innerHTML = turn;
-            cheakWin();
-            cheakDraw();
+            checkWin();
+            checkDraw();
             changeTurn();
         }
-    })
-})
+    });
+});
 
 function changeTurn() {
     if (turn === "X") {
         turn = "O";
         document.querySelector(".bg").style.left = "85px";
-    }
-    else {
+    } else {
         turn = "X";
         document.querySelector(".bg").style.left = "0";
     }
 }
 
-function cheakWin() {
+function checkWin() {
     let winConditions = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
         [0, 3, 6], [1, 4, 7], [2, 5, 8],
         [0, 4, 8], [2, 4, 6]
-    ]
+    ];
+
     for (let i = 0; i < winConditions.length; i++) {
         let v0 = boxes[winConditions[i][0]].innerHTML;
         let v1 = boxes[winConditions[i][1]].innerHTML;
         let v2 = boxes[winConditions[i][2]].innerHTML;
 
-        if (v0 != "" && v0 === v1 && v0 === v2) {
+        if (v0 !== "" && v0 === v1 && v0 === v2) {
             isGameOver = true;
 
-            document.querySelector("#results").innerHTML = turn + " win";
-            document.querySelector("#play-again").style.display = "inline"
+            document.querySelector("#results").innerHTML = turn + " wins!";
+            document.querySelector("#play-again").style.display = "inline";
 
             if (turn === "X") {
-                xWins++;
+                xConsecutiveWins++;   // Increment consecutive wins for X
+                oConsecutiveWins = 0; // Reset consecutive wins for O
             } else {
-                owins++;
+                oConsecutiveWins++;   // Increment consecutive wins for O
+                xConsecutiveWins = 0; // Reset consecutive wins for X
             }
-            console.log(xWins)
-            console.log(owins)
 
-            for (j = 0; j < 3; j++) {
+            // Check for Hat-Trick (three consecutive wins)
+            if (xConsecutiveWins === 3) {
+                p.innerHTML = "Hat-Trick Win For X!";
+                xConsecutiveWins = 0;  // Reset counter after displaying hat-trick
+            } else if (oConsecutiveWins === 3) {
+                p.innerHTML = "Hat-Trick Win For O!";
+                oConsecutiveWins = 0;  // Reset counter after displaying hat-trick
+            }
+
+            for (let j = 0; j < 3; j++) {
                 boxes[winConditions[i][j]].style.backgroundColor = "#08D9D6";
                 boxes[winConditions[i][j]].style.color = "#000";
-
-                if (xWins === 3) {
-                    p.innerHTML = "Hat-Trick Win For X";
-                    p.classList.add('#p');
-                    xWins=0;
-                }
-                else if (owins === 3) {
-                    p.innerHTML = "Hat-Trick Win For Y";
-                    p.classList.add('#p');
-                    owins=0;
-                }
             }
+
+            break; // Stop checking further once a win is found
         }
     }
 }
 
-function cheakDraw() {
+function checkDraw() {
     if (!isGameOver) {
         let isDraw = true;
         boxes.forEach(e => {
             if (e.innerHTML === "") isDraw = false;
-        })
+        });
 
         if (isDraw) {
             isGameOver = true;
-            document.querySelector("#results").innerHTML = "Draw";
-            document.querySelector("#play-again").style.display = "inline"
+            document.querySelector("#results").innerHTML = "Draw!";
+            document.querySelector("#play-again").style.display = "inline";
+            xConsecutiveWins = 0; // Reset consecutive wins on a draw
+            oConsecutiveWins = 0; // Reset consecutive wins on a draw
         }
     }
 }
-
-
 
 document.querySelector("#play-again").addEventListener("click", () => {
     isGameOver = false;
@@ -102,6 +101,6 @@ document.querySelector("#play-again").addEventListener("click", () => {
     boxes.forEach(e => {
         e.innerHTML = "";
         e.style.removeProperty("background-color");
-        e.style.color = "#fff"
-    })
-})
+        e.style.color = "#fff";
+    });
+});
